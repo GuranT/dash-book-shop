@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+import os
 
 app = FastAPI()
 
@@ -12,7 +14,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/", StaticFiles(directory="../frontend/dist", html=True), name="static")
+dist_path = "../frontend/dist"
+if os.path.exists(dist_path):
+    app.mount("/", StaticFiles(directory=dist_path, html=True), name="static")
+else:
+    @app.get("/")
+    async def root():
+        return HTMLResponse("<h1>Админка готова</h1>")
 
 @app.post("/webhook/dash")
 async def dash_webhook(payload: dict):
