@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: dash-book-shop
+    env: docker
+    plan: starter
+    autoDeploy: true
+
+databases:
+  - name: bookshop-db
+    plan: free
